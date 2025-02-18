@@ -30,8 +30,18 @@ export const getAllTours = async(queryObj) => {
             const sortFields = queryObj.sort.split(',').join(' ');
             sortOption = sortFields;
         }
-        
+        ///////////////////////////field//////////////////////
+        let selectedField;
+        if(queryObj.fields){
+            selectedField = queryObj.fields.split(',').join(' ')
+
+        }
+
+
+
+
         const tours = await Tour.find(parsedQuery).sort(sortOption || '-createdAt' )
+        .select(selectedField || '-__v') //default :exclude__v field
         return ({
             status: "success",
             total: tours.length,
