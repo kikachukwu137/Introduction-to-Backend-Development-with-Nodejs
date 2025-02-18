@@ -1,14 +1,41 @@
 import Tour from '../models/tour.model.js';
 import ErrorWithStatus from '../exception/errorWithStatus.js';
 
-export const getAllUser = async() => {
+export const getAllTours = async(queryObj) => {
     try {
-        const users = await Tour.find()
+        ///////////////////////////////////////filtering///////////////////////////////////////////////
+          // Create a copy of queryObj to prevent mutation
+          const filteredQuery = { ...queryObj };
+          
+          
 
+          // Excluded fields (pagination, sorting, etc.)
+          const excludedFieldsList = ['page', 'sort', 'limit', 'fields'];// remove this keys from filteredQuery
+          excludedFieldsList.forEach(el => delete filteredQuery[el]);
+  
+          
+        ////////////////////////////advance filtering//////////////////
+          // Convert query object to string for regex processing
+          let queryStr = JSON.stringify(filteredQuery);
 
+          // Replace operators (gte, gt, lte, lt) with MongoDB syntax
+          queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+  
+          // Convert query string back to an object
+          let parsedQuery = JSON.parse(queryStr);
+        ///////////////////////// sorting//////////////////
+        let sortOption ;// initialize it
+        if (queryObj.sort) {
+            // Convert sort string to MongoDB format (e.g., "price,-rating" => { price: 1, rating: -1 })
+            const sortFields = queryObj.sort.split(',').join(' ');
+            sortOption = sortFields;
+        }
+        
+        const tours = await Tour.find(parsedQuery).sort(sortOption || '-createdAt' )
         return ({
-            status: "Good",
-            data: users
+            status: "success",
+            total: tours.length,
+            data: tours
         }) 
 
         

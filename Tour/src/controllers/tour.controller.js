@@ -1,4 +1,4 @@
-import { createTour,deleteTour,getAllUser, getTour,updateOneTour} from "../services/tour.service.js";
+import { createTour,deleteTour,getAllTours, getTour,updateOneTour} from "../services/tour.service.js";
 
 
 export const createTourController = async(req,res,next) => {
@@ -17,15 +17,17 @@ export const createTourController = async(req,res,next) => {
 }
 
 
-export const getAlluserController = async(req,res) => {
+export const getAllToursController = async(req,res) => {
     try {
-        const users = await getAllUser()
+        const queryObj = req.query ? { ...req.query } : {};
+        let tours = await getAllTours(queryObj)
+        
 
         res.status(200).json({
-            data: users
+            data: tours
         })
     } catch (error) {
-        res.status(404).json({status: "failed"})
+        res.status(404).json({status: "failed",message:error.message})
         
     }
 
@@ -45,7 +47,7 @@ export const getTourController = async(req,res) => {
         })
     } catch (error) {
         
-        res.status(404).json({status: "failed"})
+        res.status(404).json({status: "failed",message: error.message})
 
     }
 }
