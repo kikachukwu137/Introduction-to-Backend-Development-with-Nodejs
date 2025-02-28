@@ -2,6 +2,7 @@ import ErrorWithStatus from "../exception/errorWithStatus.js";
 import {promisify} from 'util'
 import jwt from 'jsonwebtoken'
 import User from "../models/user.model.js";
+
 export const tourMiddleWare = (req,res,next) => {
     req.query.limit = '5';
     req.query.sort = '-ratingsAverage,price';
@@ -68,46 +69,3 @@ export const restrictTo = (...roles) => {
     }
 }
 
-
-
-
-/*export const protect = async (req, res, next) => {
-    try {
-        let token;
-
-        // Check if the token exists in the request header
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-            token = req.headers.authorization.split(' ')[1];
-        }
-
-        if (!token) {
-            return next(new ErrorWithStatus('Access denied. Please log in to get access.', 401));
-        }
-
-        // Verify the token
-        let decoded;
-        try {
-            decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-        } catch (error) {
-            return next(new ErrorWithStatus('Invalid or expired token. Please log in again.', 401));
-        }
-
-        // Check if the user still exists
-        const user = await User.findById(decoded.id);
-        if (!user) {
-            return next(new ErrorWithStatus('User no longer exists.', 401));
-        }
-
-        // Check if the user changed their password after the token was issued
-        if (user.changedPasswordAfter(decoded.iat)) {
-            return next(new ErrorWithStatus('Password changed recently. Please log in again.', 401));
-        }
-
-        // Attach the user object to the request for later use
-        req.user = user;
-        next();
-    } catch (error) {
-        next(new ErrorWithStatus(error.message || 'Authentication failed', 500));
-    }
-};
-*/

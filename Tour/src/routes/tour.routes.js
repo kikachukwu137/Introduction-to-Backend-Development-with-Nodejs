@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTourController, deleteTourController, getAllToursController, getMonthlyPlanController, getStatsController, getTourController, updateTourController ,} from "../controllers/tour.controller.js";
+import { createTourController, deleteTourController, getAllToursController, getMonthlyPlanController, getStatsController, getTourController, updateTourController } from "../controllers/tour.controller.js";
 import { tourMiddleWare } from "../middleware/middleware.tour.js";
 import {protect,restrictTo} from '../middleware/middleware.tour.js'
 
