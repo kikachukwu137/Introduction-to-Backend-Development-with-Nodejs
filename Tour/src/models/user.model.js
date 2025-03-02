@@ -68,8 +68,8 @@ userSchema.methods.createPasswordNewToken= function() {
     this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
     this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
 
-    console.log("🔹 Generated reset token:", resetToken);
-    console.log("🔹 Hashed token stored in DB:", this.passwordResetToken);
+    // console.log("🔹 Generated reset token:", resetToken);
+    // console.log("🔹 Hashed token stored in DB:", this.passwordResetToken);
     
     return resetToken;
 };

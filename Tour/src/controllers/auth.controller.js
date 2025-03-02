@@ -1,6 +1,7 @@
 import User from '../models/user.model.js'
 import ErrorWithStatus from '../exception/errorWithStatus.js';
 import sendEmail from '../utils/email.js';
+import crypto from 'crypto'
 
 /*
 export const  forgotPassword = async (req, res, next) => {
@@ -87,4 +88,25 @@ export const forgotPassword = async (req, res, next) => {
 
   
 
-export const resetPassword = async(req,res,next) => {}
+export const resetPassword = async(req,res,next) => {
+  //1 get user based on the token stored in the database
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex')
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetExpires: {$gt: Date.now()}
+    })
+//2 check if token have expire
+if(!user){
+  return next(new ErrorWithStatus('token have expired', 400))
+}
+user.password = req.body.password;
+user.passwordConfirm = req.body.passwordConfirm
+user.passwordResetToken = undefined;
+user.passwordResetExpires = undefined;
+await user.save()
+
+}
