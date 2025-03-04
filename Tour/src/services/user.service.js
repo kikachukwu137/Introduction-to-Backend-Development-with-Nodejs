@@ -1,4 +1,4 @@
-import User from "../models/user.model.js";
+/*import User from "../models/user.model.js";
 import ErrorWithStatus from "../exception/errorWithStatus.js";
 import jwt from 'jsonwebtoken';
 import sendEmail from "../utils/email.js";
@@ -38,47 +38,6 @@ export const signup = async(inputData) => {
         
     }
 }
-// export const resetPasswordservice = async()=>{}
-// export const forgotPasswordService = async (email, reqProtocol, reqHost) => {
-//     // 1) Get user based on POSTed email
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//         throw new ErrorWithStatus('There is no user with this email address.', 404);
-
-    
-
-//     // 2) Generate the random reset token
-//     const resetToken = user.createPasswordResetToken()
-
-//     await user.save({ validateBeforeSave: false });
-
-//     // 3) Create reset URL
-//     const resetURL = `${reqProtocol}://${reqHost}/api/v1/users/resetPassword/${resetToken}`;
-
-//     // 4) Email message
-//     const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
-//     try {
-//         await sendEmail({
-//             email: user.email,
-//             subject: 'Your password reset token (valid for 10 min)',
-//             message,
-//         });
-
-//         return { resetURL };
-//     } catch (err) {
-//         user.passwordResetToken = undefined;
-//         user.passwordResetExpires = undefined;
-//         await user.save({ validateBeforeSave: false });
-
-//         throw new ErrorWithStatus('There was an error sending the email. Try again later!', 500);
-//     }
-// };
-
-
-
-
-
 
 export const login= async(userEmail,password) => {
     try {
@@ -118,3 +77,4 @@ export const getAllUser = async() => {
         
     }
 }
+    */

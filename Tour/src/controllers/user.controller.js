@@ -1,4 +1,4 @@
-import * as userService from '../services/user.service.js'
+/*import * as userService from '../services/user.service.js'
 
 
 export const signup = async(req,res)=> {
@@ -46,7 +46,7 @@ export const login = async(req,res) =>{
 
         
     }
-}
+}*/
 
 // export const forgetPassword = async (req, res, next) => {
 //     try {

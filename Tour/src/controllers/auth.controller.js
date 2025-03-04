@@ -2,6 +2,52 @@ import User from '../models/user.model.js'
 import ErrorWithStatus from '../exception/errorWithStatus.js';
 import sendEmail from '../utils/email.js';
 import crypto from 'crypto'
+import { catchAsync } from '../utils/catchAsync.js';
+import jwt from 'jsonwebtoken'
+
+
+const token = jwt.sign({},process.env.JWT_SECRET,)
+
+export const signup = catchAsync(async(req,res,next)=>{
+  const user = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    comfirmedPassword: req.body.comfirmedPassword
+
+  })
+  
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 export const  forgotPassword = async (req, res, next) => {
@@ -99,7 +145,7 @@ export const resetPassword = async(req,res,next) => {
       passwordResetToken: hashedToken,
       passwordResetExpires: {$gt: Date.now()}
     })
-//2 check if token have expire
+//2 check if token have expire abd there is a  user
 if(!user){
   return next(new ErrorWithStatus('token have expired', 400))
 }
@@ -108,5 +154,11 @@ user.passwordConfirm = req.body.passwordConfirm
 user.passwordResetToken = undefined;
 user.passwordResetExpires = undefined;
 await user.save()
+
+// update the changePasswordAt property of the user
+
+
+//log the user in and sent jwt
+
 
 }
