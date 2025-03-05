@@ -1,4 +1,6 @@
-/*import User from "../models/user.model.js";
+import User from "../models/user.model.js";
+import { catchAsync } from "../utils/catchAsync.js";
+/*
 import ErrorWithStatus from "../exception/errorWithStatus.js";
 import jwt from 'jsonwebtoken';
 import sendEmail from "../utils/email.js";
@@ -64,6 +66,7 @@ export const login= async(userEmail,password) => {
         throw new ErrorWithStatus(error.message,error.status || 500)
     }
 }
+    */
 export const getAllUser = async() => {
     try {
         const users = await User.find()
@@ -77,4 +80,3 @@ export const getAllUser = async() => {
         
     }
 }
-    */

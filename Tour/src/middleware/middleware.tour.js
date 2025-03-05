@@ -2,6 +2,7 @@ import ErrorWithStatus from "../exception/errorWithStatus.js";
 import {promisify} from 'util'
 import jwt from 'jsonwebtoken'
 import User from "../models/user.model.js";
+import { catchAsync } from "../utils/catchAsync.js";
 
 export const tourMiddleWare = (req,res,next) => {
     req.query.limit = '5';
@@ -25,7 +26,7 @@ export const errorController =  ((err,req,res,next)=>{
 
 })
 
-export const protect   = async(req,res,next) =>{
+export const protect   = catchAsync(async(req,res,next) =>{
     //Getting token and check if it exist
     let token;
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
@@ -58,8 +59,8 @@ export const protect   = async(req,res,next) =>{
    //
    req.user = currentUser;
     next()
-}
-
+})
+//note authentication comes before authorization
 export const restrictTo = (...roles) => {
     return (req,res,next) => {
         if(!roles.includes(req.user.role)){

@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     required: [true, "Please provide a password"],
     select: false,
   },
+  
   confirmedPassword: {
     type: String,
     required: [true, "Please confirm your password"],
@@ -35,7 +36,7 @@ const userSchema = new mongoose.Schema({
         return val === this.password;
       },
       message: "Passwords do not match",
-    },
+    }
   },
   passwordChangedAt: Date,
   passwordResetToken: String,
@@ -65,6 +66,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 
 userSchema.methods.createPasswordNewToken= function() {
     const resetToken = crypto.randomBytes(32).toString("hex");
+    //this goes to the data base
     this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
     this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
 
