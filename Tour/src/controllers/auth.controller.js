@@ -9,6 +9,19 @@ const generateToken = id => {
   const token = jwt.sign({id},process.env.JWT_SECRET,{expiresIn: process.env.JWT_EXPIRES_IN})
   return token
 }
+  const createSendToken = (user,statuscode,res) => {
+
+    res.status(statuscode).json({
+      status: 'success',
+      token: generateToken(user._id),
+      data:{
+        user
+
+      }
+
+    })
+  }
+
 
 export const signup = catchAsync(async(req,res,next)=>{
   const user = await User.create({
@@ -18,17 +31,11 @@ export const signup = catchAsync(async(req,res,next)=>{
     confirmedPassword: req.body.confirmedPassword
 
   })
-    res.status(201).json({
-      status: 'success',
-      token: generateToken(user._id),
-      data:{
-        user
-
-      }
-
-    })
+  createSendToken(user,201,res)
+   
   
 })
+  
 
 export const login = catchAsync(async(req,res,next)=>{
   const email = req.body.email
@@ -40,15 +47,16 @@ export const login = catchAsync(async(req,res,next)=>{
   if(!user || !(await user.correctPassword(password, user.password))){
     return next(new ErrorWithStatus('invalid email or password'),401)
   }
-  res.status(201).json({
-    status: 'success',
-    token: generateToken(user._id),
-    data:{
-      user
+  createSendToken(user,201,res)
+  // res.status(201).json({
+  //   status: 'success',
+  //   token: generateToken(user._id),
+  //   data:{
+  //     user
 
-    }
+  //   }
 
-  })
+  // })
 
   
 })
@@ -121,15 +129,17 @@ await user.save()
 
 
 //log the user in and sent jwt
-res.status(201).json({
-  status: 'success',
-  token: generateToken(user._id),
-  data:{
-    user
+createSendToken(user,201,res)
+// res.status(201).json({
+//   status: 'success',
+//   token: generateToken(user._id),
+//   data:{
+//     user
 
-  }
+//   }
+
+// })
+
 
 })
 
-
-})

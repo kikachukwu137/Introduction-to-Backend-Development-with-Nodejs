@@ -12,6 +12,8 @@ userRouter.post('/login',login)
 userRouter.post('/forgotPassword',forgotPassword)
 userRouter.patch('/resetPassword/:token',resetPassword)
 
+// +userRouter.patch('/updateMyPassword',protect,updatePassword)
+
 
 userRouter.get("/",protect,getAllUser)
 

@@ -16,10 +16,10 @@ export const tourMiddleWare = (req,res,next) => {
 
 
 //global error handler
-export const errorController =  ((err,req,res,next)=>{
-    err.statuscode = err.statuscode || 500;
+export const globalErrorHandler =  ((err,req,res,next)=>{
+    err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error'
-    res.status(err.statuscode).json({
+    res.status(err.statusCode).json({
         status: err.status,
         message: err.message
     })
