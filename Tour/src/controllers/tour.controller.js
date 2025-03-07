@@ -34,7 +34,7 @@ export const getAllToursController =catchAsync(async(req,res,next) => {
 export const getTourController = catchAsync(async(req,res,next) => {
     
         const Id = req.params.tourId;
-        console.log(typeof(Id))
+        
         const tour = await getTour(Id)
         res.status(200).json({
             data: tour

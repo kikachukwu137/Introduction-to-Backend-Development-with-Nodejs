@@ -177,7 +177,8 @@ export const  getTour = async (tourId) =>{
         })
         
     } catch (error) {
-        throw new ErrorWithStatus(error.message, error.status || 500)        
+        throw new ErrorWithStatus(error.message, error.status || 500)   
+        // throw new ErrorWithStatus('find the error',404)     
     }
 
 }

@@ -1,12 +1,12 @@
 {
   "name": "tour",
   "version": "1.0.0",
-  "description": "",
+  "description": "learning node,express and mongoDB",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/server.js",
-    "start:prod":"NODE_ENV=production nodemon src/server.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon src/server.js",
     "test1": "node src/utils/testEmail.js",
     "debug": "ndb server.js"
   },
@@ -16,10 +16,12 @@
   "type": "module",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.0",
+    "morgan": "^1.10.0",
     "ndb": "^0.2.4",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",

@@ -16,6 +16,10 @@ userRouter.patch('/resetPassword/:token',resetPassword)
 
 
 userRouter.get("/",protect,getAllUser)
+// userRouter.get("/",getAllUser)
+
+
+
 
 
 

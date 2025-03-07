@@ -19,6 +19,7 @@ export const tourMiddleWare = (req,res,next) => {
 
 const handleCastErrorDB = err => {
     const message = `Invalid ${err.path}: ${err.value}.` 
+    console.log(message)
     return new ErrorWithStatus(message,400)
 }
 
@@ -45,7 +46,7 @@ const sendErrorProduction = (err,res) => {
     }//programming or unknown error
     else{
         // log error
-        console.error('Error',err)
+        console.error('Error')
         //send generic message
         res.status(500).json({
             status: 'error',
@@ -59,13 +60,14 @@ const sendErrorProduction = (err,res) => {
 export const globalErrorHandler =  ((err,req,res,next)=>{
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error'
+
     if(process.env.NODE_ENV === 'development'){
         sendErrorDevelopment(err,res)
        
 
     }else if(process.env.NODE_ENV === 'production'){
         let error = {...err};
-        if(error.name === 'CastError')error = handleCastErrorDB(error)
+        if(error.name === 'CastError') error = handleCastErrorDB(error)
 
         sendErrorProduction(error,res)
         
@@ -75,6 +77,8 @@ export const globalErrorHandler =  ((err,req,res,next)=>{
 
 })
 
+//AUTHENTICATION
+
 export const protect   = catchAsync(async(req,res,next) =>{
     //Getting token and check if it exist
     let token;
@@ -82,28 +86,34 @@ export const protect   = catchAsync(async(req,res,next) =>{
         token = req.headers.authorization.split(' ')[1]
     }
     if(!token){
-        return next( new ErrorWithStatus('invalid  please login to get access',401))
+        return next( new ErrorWithStatus('Invalid TOKEN please login to get access',401))
     }
     //verify token
-    // const decoded = await promisify(jwt.verify)(token,process.env.JWT_SECRET)
-    const decoded =jwt.verify(token,process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            console.error("Token verification failed:", err.message);
-            return;
-        }
-        // console.log("Decoded Token:", decoded);
-    });
+    //2️⃣ What is promisify?
+    // promisify is a function from Node.js util module that converts callback-based functions into Promise-based functions.
+    // Since jwt.verify expects a callback, we use promisify to turn it into a function that returns a Promise.
+    // 3️⃣ What Does promisify(jwt.verify) Do?
+    // promisify(jwt.verify) creates a new function that can be used with await.
+    // Instead of using a callback, it returns a Promise, which we can await.
+     const decoded = await promisify(jwt.verify)(token,process.env.JWT_SECRET)
+    // const decoded =jwt.verify(token,process.env.JWT_SECRET, (err, decoded) => {
+    //     if (err) {
+    //         console.error("Token verification failed:", err.message);
+    //         return;
+    //     }
+    //     // console.log("Decoded Token:", decoded);
+    // });
 
     //check if user still exist
     const currentUser = await User.findById(decoded.id)
     if(!currentUser){
-        return next( new ErrorWithStatus('the user doesnt exist', 401))
+        return next( new ErrorWithStatus('This User doesnt exist', 401))
     }
 
 
     // check if user changed password after the token was issued
    if(currentUser.changedPasswordAfter(decoded.iat)){
-        return next( new ErrorWithStatus('please login again',401))
+        return next( new ErrorWithStatus('please login again ,you just reset your password',401))
    }
    //
    req.user = currentUser;

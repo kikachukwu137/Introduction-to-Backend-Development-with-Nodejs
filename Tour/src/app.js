@@ -3,9 +3,13 @@ import ErrorWithStatus from './exception/errorWithStatus.js';
 import { globalErrorHandler } from './middleware/middleware.tour.js';
 import tourRouter from './routes/tour.routes.js';
 import userRouter from './routes/user.routes.js';
+import morgan from 'morgan'
 
 
 const app = express();
+if(process.env.NODE_ENV === 'development'){
+    app.use(morgan('dev'))
+}
 app.use(express.json())
 
 app.use("/api/v1/tours",tourRouter)
