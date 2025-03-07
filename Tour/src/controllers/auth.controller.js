@@ -41,11 +41,11 @@ export const login = catchAsync(async(req,res,next)=>{
   const email = req.body.email
   const password = req.body.password
   if(!email || ! password){
-    return next(new ErrorWithStatus('email and password required'),401)
+    return next(new ErrorWithStatus('email and password required',401))
   }
   const user = await User.findOne({email}).select('+password')
   if(!user || !(await user.correctPassword(password, user.password))){
-    return next(new ErrorWithStatus('invalid email or password'),401)
+    return next(new ErrorWithStatus('invalid email or password',401))
   }
   createSendToken(user,201,res)
   // res.status(201).json({
