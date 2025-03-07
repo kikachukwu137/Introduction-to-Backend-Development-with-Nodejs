@@ -16,6 +16,13 @@ export const tourMiddleWare = (req,res,next) => {
 
 
 //global error handler
+
+const handleCastErrorDB = err => {
+    const message = `Invalid ${err.path}: ${err.value}.` 
+    return new ErrorWithStatus(message,400)
+}
+
+ 
 const sendErrorDevelopment = (err,res) => {
     res.status(err.statusCode).json({
         status: err.status,
@@ -56,8 +63,11 @@ export const globalErrorHandler =  ((err,req,res,next)=>{
         sendErrorDevelopment(err,res)
        
 
-    }else{
-        sendErrorProduction(err,res)
+    }else if(process.env.NODE_ENV === 'production'){
+        let error = {...err};
+        if(error.name === 'CastError')error = handleCastErrorDB(error)
+
+        sendErrorProduction(error,res)
         
     }
 
