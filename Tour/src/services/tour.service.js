@@ -155,6 +155,9 @@ export const  createTour = async(bioData)=>{
         
         
     } catch (error) {
+        // if(error.code === 11000 ){
+        //     throw new ErrorWithStatus('duplicate value',400)
+        // }
         throw new ErrorWithStatus(error.message, error.status || 500)
         
     }

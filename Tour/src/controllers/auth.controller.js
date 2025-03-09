@@ -21,6 +21,7 @@ const generateToken = id => {
 
     })
   }
+  
 
 
 export const signup = catchAsync(async(req,res,next)=>{

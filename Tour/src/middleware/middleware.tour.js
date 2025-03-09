@@ -17,11 +17,7 @@ export const tourMiddleWare = (req,res,next) => {
 
 //global error handler
 
-const handleCastErrorDB = err => {
-    const message = `Invalid ${err.path}: ${err.value}.` 
-    console.log(message)
-    return new ErrorWithStatus(message,400)
-}
+
 
  
 const sendErrorDevelopment = (err,res) => {
@@ -40,7 +36,9 @@ const sendErrorProduction = (err,res) => {
     if(err.isOperational){
         res.status(err.statusCode).json({
             status: err.status,
-            message: err.message
+            message : err.message,
+            data: "error"
+        
         })
 
     }//programming or unknown error
@@ -56,26 +54,119 @@ const sendErrorProduction = (err,res) => {
    
 
 }
+// function handleCastErrorDB(err){
+//     const message = `Invalid ${err.path}: ${err.value}.` 
+//     console.log(message)
+//     return new ErrorWithStatus(message,400)
+// }
 
-export const globalErrorHandler =  ((err,req,res,next)=>{
-    err.statusCode = err.statusCode || 500;
-    err.status = err.status || 'error'
+// export const globalErrorHandler =  ((err,req,res,next)=>{
+//     err.statusCode = err.statusCode || 500;
+//     err.status = err.status || 'error'
 
-    if(process.env.NODE_ENV === 'development'){
-        sendErrorDevelopment(err,res)
+//     if(process.env.NODE_ENV === 'development'){
+//         sendErrorDevelopment(err,res)
        
 
-    }else if(process.env.NODE_ENV === 'production'){
-        let error = {...err};
-        if(error.name === 'CastError') error = handleCastErrorDB(error)
+//     }else if(process.env.NODE_ENV === 'production'){
+//         // let error = {...err}; 
+//         let error = Object.assign({},err) //it is more preferable than  spreading because spreading only copy top valve properties
+//         if(error.name === 'CastError') {error = handleCastErrorDB(err)}
 
-        sendErrorProduction(error,res)
+//          sendErrorProduction(error,res)
         
-    }
+//     }
 
    
 
-})
+// })
+// ✅ Use function declaration
+// function handleCastErrorDB(err) { 
+//     const message = `Invalid ${err.path}: ${err.value}.`;
+//     return new ErrorWithStatus(message, 400);
+// }
+// const handleDuplicateFieldsDB = err => {
+//     const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+//     console.log(value);
+  
+//     const message = `Duplicate field value: ${value}. Please use another value!`;
+//     return new AppError(message, 400);
+//   };
+  
+// export const globalErrorHandler = ((err, req, res, next) => {
+//     err.statusCode = err.statusCode || 500;
+//     err.status = err.status || 'error';
+
+//     if (process.env.NODE_ENV === 'development') {
+//         sendErrorDevelopment(err, res);
+//     } else if (process.env.NODE_ENV === 'production') {
+//         let error = Object.assign({}, err); // ✅ Ensures a proper copy
+
+//         if (err.name === 'CastError') { 
+//             error = handleCastErrorDB(error); // ✅ Use function correctly
+//         }
+//     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+
+
+//         sendErrorProduction(error, res);
+//     }
+// });
+function handleCastErrorDB(err) { 
+    const message = `Invalid ${err.path}: ${err.value}.`;
+    return new ErrorWithStatus(message, 400);
+}
+
+function handleDuplicateFieldsDB(err) {
+    const field = Object.keys(err.keyValue)[0]; // Get duplicate field
+    const value = err.keyValue[field]; // Get duplicate value
+
+    const message = `Duplicate field value: ${value}. Please use another value!`;
+    return new ErrorWithStatus(message, 400);
+}
+
+const handleValidationErrorDB = err => {
+    const errors = Object.values(err.error).map(el => el.message);
+    const message = `Invalid input data. ${errors.join('. ')}`
+
+    return new ErrorWithStatus(message,400)
+
+
+
+
+    
+}
+
+export const globalErrorHandler = ((err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || 'error';
+
+    if (process.env.NODE_ENV === 'development') {
+        sendErrorDevelopment(err, res);
+    } else if (process.env.NODE_ENV === 'production') {
+        // let error = { ...err }; // ✅ Ensure proper copying of error properties
+        let error = { ...err, message: err.message };
+
+
+        if (error.name === 'CastError') { 
+            error = handleCastErrorDB(error); // ✅ Correct function call
+        }
+
+        if (error.code === 11000) { 
+            error = handleDuplicateFieldsDB(error); // ✅ Handle duplicate key error
+        }
+        if (error.name === 'ValidationError')
+            error = handleValidationErrorDB(error);
+          if (error.name === 'JsonWebTokenError') error = handleJWTError();
+          if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
+
+        sendErrorProduction(error, res);
+    }
+});
+
+
+
+
+
 
 //AUTHENTICATION
 
