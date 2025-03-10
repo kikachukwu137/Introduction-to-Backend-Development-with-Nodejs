@@ -11,6 +11,22 @@ const generateToken = id => {
 }
   const createSendToken = (user,statuscode,res) => {
 
+  const cookieOptions  = {
+    
+      //convert to milliseconds
+      expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN  * 24 *  60 * 60 * 1000),
+      httpOnly:true
+    
+
+  }
+
+
+  if(process.env.NODE_ENV === 'production') cookieOptions.secure = true
+
+    res.cookie('jwt',token,cookieOptions
+      
+    )
+
     res.status(statuscode).json({
       status: 'success',
       token: generateToken(user._id),
@@ -144,3 +160,23 @@ createSendToken(user,201,res)
 
 })
 
+export const updatePassword = catchAsync(async(req,res,next) => {
+  //get user from collction
+  const user = await User.findById(req.user.id).select('+password')
+
+  // check if password is correct
+  if(!await user.correctPassword(req.body.currentPassword,user.password)){
+    return next (new ErrorWithStatus('your current password is wrong',401))
+  }
+
+
+  //update password
+  user.password = req.body.password;
+  user.confirmedPassword = req.body.confirmedPassword
+  await user.save();
+
+  createSendToken(user,200,res)
+
+
+
+})
