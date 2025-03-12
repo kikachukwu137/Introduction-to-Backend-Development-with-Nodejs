@@ -23,7 +23,7 @@ const tourSchema = new mongoose.Schema({
     difficulty:{
         type: String,
         required: true,
-        enum:{values:['easy','medium','difficulty'],
+        enum:{values:['easy','medium','difficult'],
             message:'Difficulty is either: easy,medium,difficult'
         }
     },
@@ -82,7 +82,37 @@ const tourSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         // select: false
+    },
+    //embedded object
+
+    startLocation:{
+        //geospatial  we need the 
+
+        //Geojson
+        type:{
+            type: String,
+            default: 'Point',
+            enum:['Point']
+
+        },
+        coordinates: [Number],
+        address:String,
+        description: String
+    },locations: [{
+
+        //Geojson// creation of embedded document
+        type:{
+            type: String,
+            default: 'Point',
+            enum:['Point']
+
+        },
+        coordinates: [Number],
+        address:String,
+        description: String,
+        day: Number
     }
+    ]
 
 
 

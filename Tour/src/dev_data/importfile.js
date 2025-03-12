@@ -18,11 +18,11 @@ connect(MONGO_URL).then(()=> {
 //read file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const tours = JSON.parse(fs.readFileSync(path.join(__dirname, "../dev_data/tours-simple.json"), "utf-8"));
+const tours = JSON.parse(fs.readFileSync(path.join(__dirname, "../dev_data/tours.json"), "utf-8"));
 
 //import data into DB
 
-const importData = async() => {                                                                                                                         []
+const importData = async() => {                                                                                                                         
     try {
         await Tour.create(tours)
         console.log('successful')
