@@ -168,7 +168,8 @@ export const  createTour = async(bioData)=>{
 
 export const  getTour = async (tourId) =>{
     try {
-        const tour = await Tour.findById(tourId)
+         const tour = await Tour.findById(tourId).populate('reviews')
+         //.populate({path:'guides', select: '-__v -passwordChangeAt'})
         if(!tour){
             throw new ErrorWithStatus("this user does not exist",400)
         }

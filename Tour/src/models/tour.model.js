@@ -1,4 +1,5 @@
 import validator from 'validator';
+//import User from './user.model.js'
 import mongoose from 'mongoose';
 import slugify from 'slugify';
 const tourSchema = new mongoose.Schema({
@@ -112,7 +113,11 @@ const tourSchema = new mongoose.Schema({
         description: String,
         day: Number
     }
-    ]
+    ],
+    guides: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+    }]
 
 
 
@@ -122,12 +127,25 @@ toObject: {virtuals:true}})
 tourSchema.virtual('durationWeeks').get(function(){
     return this.duration / 7
 })
+//Virtual populate
+tourSchema.virtual('reviews',{ //name of the virtual property is reviews and 
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id'
+})
 
 //document middleware runs before .save() and .create()
 tourSchema.pre('save',function(next){
     this.slug = slugify(this.name,{lower: true})
     next( )
 })
+
+//this is for embedding
+// tourSchema.pre('save',async function(next){
+//     const guides = this.guides.map(async id => await User.findById(id))
+//     this.guides = await Promise.all(guides)
+//     next()
+// })
 // tourSchema.post('save',function(doc,next){
 
 // })
@@ -139,6 +157,15 @@ tourSchema.pre(/^find/, function(next){
 // tourSchema.pre('find', function(next){
     this.find({secretTour: {$ne: true}})
     this.start = Date.now();
+
+    next()
+})
+tourSchema.pre(/^find/,function(next){
+    this.populate({
+        path: 'guides',
+        select: '-__V -passwordChangeAt'
+    })
+
 
     next()
 })

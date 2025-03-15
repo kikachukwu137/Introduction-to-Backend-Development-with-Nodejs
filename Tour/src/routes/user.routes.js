@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import  { getAllUser, updateMe,deleteMe} from '../controllers/user.controller.js';
-import { protect} from '../middleware/middleware.tour.js'
+import { protect, restrictTo} from '../middleware/middleware.tour.js'
 import  {forgotPassword,resetPassword,updatePassword} from '../controllers/auth.controller.js';
 import  {signup,login} from '../controllers/auth.controller.js';
 
@@ -21,6 +21,8 @@ userRouter.delete('/deleteMe',protect,deleteMe)
 userRouter.get("/",protect,getAllUser)
 // userRouter.get("/",getAllUser)
 
+
+// reviews
 
 
 

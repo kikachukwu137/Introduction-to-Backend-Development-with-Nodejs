@@ -3,6 +3,7 @@ import ErrorWithStatus from './exception/errorWithStatus.js';
 import { globalErrorHandler } from './middleware/middleware.tour.js';
 import tourRouter from './routes/tour.routes.js';
 import userRouter from './routes/user.routes.js';
+import reviewRouter from './routes/review.route.js';
 import morgan from 'morgan'
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -29,6 +30,8 @@ app.use(express.json())
 
 app.use("/api/v1/tours",tourRouter)
 app.use("/api/v1/users",userRouter)
+app.use("/api/v1/reviews",reviewRouter)
+
 app.get("/home",(req,res)=>{
     res.status(200).json({message: "home"})
 
