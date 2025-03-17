@@ -1,5 +1,5 @@
 import { Router } from "express"; 
-import {protect,restrictTo} from '../middleware/middleware.tour.js'
+import {protect} from '../middleware/middleware.tour.js'
 import * as reviewController from '../controllers/review.controller.js'
 
 
