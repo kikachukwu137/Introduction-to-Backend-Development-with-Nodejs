@@ -2,6 +2,8 @@ import * as reviewService from '../services/review.service.js';
 import { catchAsync } from '../utils/catchAsync.js';
 
 export const getAllReviews =catchAsync(async(req,res,next)=>{
+    let filter = {};
+    if(req.params.tourId) filter = {tour: req.params.tourId}  // to get review filter nexted routes
     const allReviews = await reviewService.getAllReview()
     res.status(201).json({
         status: "success",
