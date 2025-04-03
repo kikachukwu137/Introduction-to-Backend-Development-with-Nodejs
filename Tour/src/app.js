@@ -1,4 +1,10 @@
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+
+
 import express from 'express';
+import path from 'path'
 import ErrorWithStatus from './exception/errorWithStatus.js';
 import { globalErrorHandler } from './middleware/middleware.tour.js';
 import tourRouter from './routes/tour.routes.js';
@@ -7,11 +13,19 @@ import reviewRouter from './routes/review.route.js';
 import morgan from 'morgan'
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import hpp from 'hpp'
+import hpp from 'hpp';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 
 const app = express();
+app.set('view engine','pug')
+app.set('views',path.join(__dirname,'views'))
+//serving static files
+app.use(express.static(path.join(__dirname,'public')))
+
 //global middleware
 //set security http headers
 app.use(helmet())
@@ -33,7 +47,7 @@ app.use("/api/v1/users",userRouter)
 app.use("/api/v1/reviews",reviewRouter)
 
 app.get("/home",(req,res)=>{
-    res.status(200).json({message: "home"})
+    res.status(200).render('base',{tour: 'welcome home', user: 'Egwaoje daniel'})
 
 })
 //prevent parameter pollution
