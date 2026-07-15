@@ -1,0 +1,1 @@
+[{"id":1,"name":"Danel","age":36,"occupation":"doctor"},{"id":3,"name":"mark","age":32,"occupation":"doctor"},{"id":4,"name":"luke","age":30,"occupation":"doctor"}]
